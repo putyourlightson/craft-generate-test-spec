@@ -1,0 +1,18 @@
+{
+  "name": "putyourlightson/craft-generate-test-spec",
+  "description": "",
+  "type": "yii2-extension",
+  "license": "mit",
+  "require": {
+    "php": "^8.0.2",
+    "craftcms/cms": "^4.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "putyourlightson\\generatetestspec\\": "src/"
+    }
+  },
+  "extra": {
+    "bootstrap": "putyourlightson\\generatetestspec\\GenerateTestSpec"
+  }
+}
