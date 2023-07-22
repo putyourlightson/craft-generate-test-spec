@@ -11,18 +11,13 @@ use craft\helpers\StringHelper;
 abstract class BaseGenerator
 {
     /**
-     * @return array< string, array< string, array > >
-     *          |array< string,
-     *              array< string,
-     *                  array{
-     *                      description: string,
-     *                      tests: array{
-     *                          name: string,
-     *                          passed: bool,
-     *                      }
-     *                  }
-     *              >
-     *          >
+     * @return array<string, array<string, array{
+     *             description: string,
+     *             tests: array<int, array{
+     *                 name: string,
+     *                 passed: bool,
+     *             }>
+     *         }>>
      */
     public static function getTests(string $path): array
     {
@@ -44,11 +39,12 @@ abstract class BaseGenerator
                 $contents = file_get_contents($file);
                 preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
                 $tests[$folder][$test]['description'] = isset($matches[1]) ? trim($matches[1]) : '';
+                $tests[$folder][$test]['tests'] = [];
 
                 preg_match_all('/^(it|test)\(\'(.*?)\'/m', $contents, $matches);
                 foreach ($matches[2] as $match) {
                     $function = ucfirst($match);
-                    $tests[$folder][$test]['tests'] = [
+                    $tests[$folder][$test]['tests'][] = [
                         'name' => $function,
                         'passed' => str_contains($testResults, '[x] ' . strtolower($function)),
                     ];

@@ -18,14 +18,12 @@ class MarkdownGenerator extends BaseGenerator
             $output .= PHP_EOL . '## [' . $folder . ' Tests](tests/' . $folder . ')' . PHP_EOL;
 
             foreach ($files as $file) {
-                if (!empty($file['tests'])) {
-                    if (!empty($file['description'])) {
-                        $output .= '> _' . $file['description'] . '_' . PHP_EOL . PHP_EOL;
-                    }
+                if (!empty($file['description'])) {
+                    $output .= '> _' . $file['description'] . '_' . PHP_EOL . PHP_EOL;
+                }
 
-                    foreach ($file['tests'] as $test) {
-                        $output .= '- [' . ($test['passed'] ? 'x' : ' ') . '] ' . $test['name'] . PHP_EOL;
-                    }
+                foreach ($file['tests'] as $test) {
+                    $output .= '- [' . ($test['passed'] ? 'x' : ' ') . '] ' . $test['name'] . PHP_EOL;
                 }
             }
         }
