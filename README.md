@@ -11,7 +11,7 @@ composer require putyourlightson/craft-generate-test-spec --dev
 ## Usage
 
 ```shell
-php craft generate-test-spec/markdown path-to-tests-folder
+php craft generate-test-spec/markdown path/to/tests
 ```
 
 ---
