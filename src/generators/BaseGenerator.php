@@ -28,7 +28,7 @@ abstract class BaseGenerator
     public static function getTests(string $path): array
     {
         $tests = [];
-        $testResults = self::getTestResults($path);
+        $testResults = strtolower(self::getTestResults($path));
         $directories = FileHelper::findDirectories($path);
         sort($directories);
 
