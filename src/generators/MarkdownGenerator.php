@@ -13,11 +13,14 @@ class MarkdownGenerator extends BaseGenerator
     {
         $output = '';
         $tests = parent::getTests($path);
+        $pathFolder = last(explode('/', $path));
 
-        foreach ($tests as $folder => $files) {
-            $output .= PHP_EOL . '## [' . $folder . ' Tests](tests/' . $folder . ')' . PHP_EOL . PHP_EOL;
+        foreach ($tests as $testTypes) {
+            $output .= PHP_EOL . '## [' . $testTypes['type'] . ' Tests](' . $pathFolder . $testTypes['path'] . ')' . PHP_EOL . PHP_EOL;
 
-            foreach ($files as $file) {
+            foreach ($testTypes['files'] as $file) {
+                $output .= '### [' . $file['name'] . '](' . $pathFolder . $file['path'] . ')' . PHP_EOL . PHP_EOL;
+
                 if (!empty($file['description'])) {
                     $output .= '> _' . $file['description'] . '_' . PHP_EOL . PHP_EOL;
                 }
