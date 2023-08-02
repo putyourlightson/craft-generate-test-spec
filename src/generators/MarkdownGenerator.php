@@ -15,7 +15,7 @@ class MarkdownGenerator extends BaseGenerator
         $tests = parent::getTests($path);
 
         foreach ($tests as $folder => $files) {
-            $output .= PHP_EOL . '## [' . $folder . ' Tests](tests/' . $folder . ')' . PHP_EOL;
+            $output .= PHP_EOL . '## [' . $folder . ' Tests](tests/' . $folder . ')' . PHP_EOL . PHP_EOL;
 
             foreach ($files as $file) {
                 if (!empty($file['description'])) {
