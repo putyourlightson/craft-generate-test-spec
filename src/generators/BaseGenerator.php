@@ -18,18 +18,14 @@ abstract class BaseGenerator
      *                  name: string,
      *                  path: string,
      *                  description: string,
-     *                  tests: array<int, array{
-     *                      name: string,
-     *                      passed: bool,
-     *                  }>
+     *                  tests: array<int, string>
      *              }>
      *          }>
      */
     public static function getTests(string $path): array
     {
         $tests = [];
-        $testResults = strtolower(self::getTestResults($path));
-        $directories = FileHelper::findDirectories($path);
+        $directories = FileHelper::findDirectories($path, ['except' => ['Datasets']]);
         sort($directories);
 
         foreach ($directories as $directory) {
@@ -53,10 +49,7 @@ abstract class BaseGenerator
                 preg_match_all('/^(it|test)\(\'(.*?)\'/m', $contents, $matches);
                 foreach ($matches[2] as $match) {
                     $function = ucfirst($match);
-                    $test['tests'][] = [
-                        'name' => $function,
-                        'passed' => str_contains($testResults, '[x] ' . strtolower($function)),
-                    ];
+                    $test['tests'][] = $function;
                 }
 
                 $testFiles[] = $test;

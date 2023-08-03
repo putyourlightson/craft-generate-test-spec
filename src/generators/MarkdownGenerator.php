@@ -16,17 +16,17 @@ class MarkdownGenerator extends BaseGenerator
         $pathFolder = last(explode('/', $path));
 
         foreach ($tests as $testTypes) {
-            $output .= PHP_EOL . '## [' . $testTypes['type'] . ' Tests](' . $pathFolder . $testTypes['path'] . ')' . PHP_EOL . PHP_EOL;
+            $output .= PHP_EOL . '## [' . $testTypes['type'] . ' Tests](' . $pathFolder . $testTypes['path'] . ')' . PHP_EOL;
 
             foreach ($testTypes['files'] as $file) {
-                $output .= '### [' . $file['name'] . '](' . $pathFolder . $file['path'] . ')' . PHP_EOL . PHP_EOL;
+                $output .= PHP_EOL . '### [' . $file['name'] . '](' . $pathFolder . $file['path'] . ')' . PHP_EOL . PHP_EOL;
 
                 if (!empty($file['description'])) {
                     $output .= '> _' . $file['description'] . '_' . PHP_EOL . PHP_EOL;
                 }
 
                 foreach ($file['tests'] as $test) {
-                    $output .= '- [' . ($test['passed'] ? 'x' : ' ') . '] ' . $test['name'] . PHP_EOL;
+                    $output .= '- ' . $test . '.' . PHP_EOL;
                 }
             }
         }
