@@ -1,5 +1,7 @@
 # Generate Test Spec for Craft CMS
 
+A Craft module that generates a test spec from PEST PHP tests.
+
 ## Installation
 
 Install this package via composer.
@@ -13,6 +15,10 @@ composer require putyourlightson/craft-generate-test-spec --dev
 ```shell
 php craft generate-test-spec/markdown path/to/tests
 ```
+
+## License
+
+This module is licensed for free under the MIT License.
 
 ---
 
