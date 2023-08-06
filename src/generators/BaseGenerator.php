@@ -25,7 +25,10 @@ abstract class BaseGenerator
     public static function getTests(string $path): array
     {
         $tests = [];
-        $directories = FileHelper::findDirectories($path, ['except' => ['Datasets']]);
+        $directories = FileHelper::findDirectories($path, [
+            'except' => ['datasets'],
+            'caseSensitive' => false,
+        ]);
         sort($directories);
 
         foreach ($directories as $directory) {
