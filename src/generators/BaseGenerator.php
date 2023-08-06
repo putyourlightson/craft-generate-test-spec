@@ -26,7 +26,7 @@ abstract class BaseGenerator
     {
         $tests = [];
         $directories = FileHelper::findDirectories($path, [
-            'except' => ['datasets'],
+            'except' => ['Datasets'],
             'caseSensitive' => false,
         ]);
         sort($directories);
