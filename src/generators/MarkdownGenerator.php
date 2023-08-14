@@ -15,18 +15,22 @@ class MarkdownGenerator extends BaseGenerator
         $tests = parent::getTests($path);
         $pathFolder = last(explode('/', $path));
 
-        foreach ($tests as $testTypes) {
-            $output .= PHP_EOL . '## [' . $testTypes['type'] . ' Tests](' . $pathFolder . $testTypes['path'] . ')' . PHP_EOL;
+        foreach ($tests as $type => $testTypes) {
+            $output .= PHP_EOL . '## ' . $type . ' Tests' . PHP_EOL;
 
-            foreach ($testTypes['files'] as $file) {
-                $output .= PHP_EOL . '### [' . $file['name'] . '](' . $pathFolder . $file['path'] . ')' . PHP_EOL . PHP_EOL;
+            foreach ($testTypes as $class => $testClass) {
+                $output .= PHP_EOL . '### [' . $class . '](' . $pathFolder . '/' . $testClass['path'] . ')' . PHP_EOL . PHP_EOL;
 
-                if (!empty($file['description'])) {
-                    $output .= '> _' . $file['description'] . '_' . PHP_EOL . PHP_EOL;
+                if (!empty($testClass['description'])) {
+                    $output .= '> _' . $testClass['description'] . '_' . PHP_EOL . PHP_EOL;
                 }
 
-                foreach ($file['tests'] as $test) {
-                    $output .= '- ' . $test . '.' . PHP_EOL;
+                foreach ($testClass['tests'] as $test) {
+                    if ($test['passed']) {
+                        $output .= '☑ ' . $test['name'] . '.  ' . PHP_EOL;
+                    } else {
+                        $output .= '<span style="color: #d81e23;">☒ ' . $test['name'] . '.</span>  ' . PHP_EOL;
+                    }
                 }
             }
         }
