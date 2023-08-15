@@ -26,11 +26,8 @@ class MarkdownGenerator extends BaseGenerator
                 }
 
                 foreach ($testClass['tests'] as $test) {
-                    if ($test['passed']) {
-                        $output .= '☑ ' . $test['name'] . '.  ' . PHP_EOL;
-                    } else {
-                        $output .= '<span style="color: #d81e23;">☒ ' . $test['name'] . '.</span>  ' . PHP_EOL;
-                    }
+                    $output .= $test['passed'] ? '🟢' : '🔴';
+                    $output .= ' ' . $test['name'] . '.  ' . PHP_EOL;
                 }
             }
         }
