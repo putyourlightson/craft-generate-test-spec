@@ -26,7 +26,8 @@ class MarkdownGenerator extends BaseGenerator
                 }
 
                 foreach ($testClass['tests'] as $test) {
-                    $output .= $test['passed'] ? '🟢' : '🔴';
+                    // Octicons: https://github.com/primer/octicons/tree/main/icons
+                    $output .= $test['passed'] ? '![Pass](https://raw.githubusercontent.com/putyourlightson/craft-generate-test-spec/main/icons/pass.svg)' : '![Fail](https://raw.githubusercontent.com/putyourlightson/craft-generate-test-spec/main/icons/fail.svg)';
                     $output .= ' ' . $test['name'] . '.  ' . PHP_EOL;
                 }
             }
