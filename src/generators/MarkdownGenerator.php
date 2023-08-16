@@ -22,7 +22,7 @@ class MarkdownGenerator extends BaseGenerator
                 $output .= PHP_EOL . '### [' . $class . '](' . $pathFolder . '/' . $testClass['path'] . ')' . PHP_EOL . PHP_EOL;
 
                 if (!empty($testClass['description'])) {
-                    $output .= '> _' . $testClass['description'] . '_' . PHP_EOL . PHP_EOL;
+                    $output .= '_' . $testClass['description'] . '_' . PHP_EOL . PHP_EOL;
                 }
 
                 foreach ($testClass['tests'] as $test) {
