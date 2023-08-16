@@ -11,7 +11,10 @@ abstract class BaseGenerator
      * @return array<string, array<string, array{
      *              path: string,
      *              description: string,
-     *              tests: array<int, string>
+     *              tests: array<int, array{
+     *                  name: string,
+     *                  passed: bool
+     *              }>
      *          }>>
      */
     public static function getTests(string $path): array
