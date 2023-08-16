@@ -1,1 +1,0 @@
-# Release Notes for Generate Test Spec
