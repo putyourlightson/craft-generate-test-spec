@@ -1,6 +1,10 @@
 # Generate Test Spec for Craft CMS
 
-A Craft module that generates a test spec from PEST PHP tests.
+A Craft module that generates a test specification from PEST PHP test results.
+
+![Test specification](https://putyourlightson.com/assets/images/articles/blitz-test-spec-screenshot.png)
+
+See an [example](https://github.com/putyourlightson/craft-blitz/blob/develop/tests/TESTS.md).
 
 ## Installation
 
