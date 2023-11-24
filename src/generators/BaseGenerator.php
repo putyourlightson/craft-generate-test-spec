@@ -28,33 +28,36 @@ abstract class BaseGenerator
         }
 
         foreach ($xml->testsuite as $testsuite) {
-            foreach ($testsuite->testsuite as $testFile) {
-                $fileTests = [];
-                $nameParts = explode('\\', (string)$testFile['name']);
-                $nameParts = array_splice($nameParts, -2);
-                $testType = $nameParts[0];
-                $testClass = str_replace('Test', '', $nameParts[1]);
+            foreach ($testsuite->testsuite as $testsuite) {
+                foreach ($testsuite->testsuite as $testsuite) {
+                    $fileTests = [];
+                    $nameParts = explode('\\', (string)$testsuite['name']);
+                    $nameParts = array_splice($nameParts, -2);
+                    $testClass = str_replace('Test', '', $nameParts[1]);
 
-                foreach ($testFile->testcase as $testCase) {
-                    $fileTests[] = [
-                        'name' => (string)$testCase['name'],
-                        'passed' => empty($testCase->failure),
+                    foreach ($testsuite->testcase as $testCase) {
+                        $name = $testCase['name'];
+                        $name = str_replace('__pest_evaluable_', '', $name);
+                        $name = str_replace('__', '/underscore/', $name);
+                        $name = str_replace('_', ' ', $name);
+                        $name = str_replace('/underscore/', '_', $name);
+                        $fileTests[] = [
+                            'name' => $name,
+                            'passed' => empty($testCase->failure),
+                        ];
+                    }
+
+                    $filePath = $nameParts[0] . '/' . $nameParts[1] . '.php';
+                    $contents = file_get_contents($path . '/' . $filePath);
+                    preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
+                    $description = isset($matches[1]) ? trim($matches[1]) : '';
+
+                    $tests[$nameParts[0]][$testClass] = [
+                        'path' => $filePath,
+                        'description' => $description,
+                        'tests' => $fileTests,
                     ];
                 }
-
-                $file = (string)$testFile['file'];
-                $pathParts = explode('/', $file);
-                $pathParts = array_splice($pathParts, -2);
-
-                $contents = file_get_contents($file);
-                preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
-                $description = isset($matches[1]) ? trim($matches[1]) : '';
-
-                $tests[$testType][$testClass] = [
-                    'path' => $pathParts[0] . '/' . $pathParts[1],
-                    'description' => $description,
-                    'tests' => $fileTests,
-                ];
             }
         }
 
