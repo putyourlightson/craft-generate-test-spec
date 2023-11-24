@@ -27,9 +27,9 @@ abstract class BaseGenerator
             exit('Could not load `' . $path . '/test-results.xml` file.');
         }
 
-        foreach ($xml->testsuite as $testsuite) {
-            foreach ($testsuite->testsuite as $testsuite) {
-                foreach ($testsuite->testsuite as $testsuite) {
+        foreach ($xml->testsuite as $testsuiteLevel1) {
+            foreach ($testsuiteLevel1->testsuite as $testsuiteLevel2) {
+                foreach ($testsuiteLevel2->testsuite as $testsuite) {
                     $fileTests = [];
                     $nameParts = explode('\\', (string)$testsuite['name']);
                     $nameParts = array_splice($nameParts, -2);
@@ -43,7 +43,7 @@ abstract class BaseGenerator
                         $name = str_replace('/underscore/', '_', $name);
                         $fileTests[] = [
                             'name' => $name,
-                            'passed' => empty($testCase->failure),
+                            'passed' => empty($testCase->error) && empty($testCase->failure),
                         ];
                     }
 
