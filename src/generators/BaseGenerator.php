@@ -27,24 +27,31 @@ abstract class BaseGenerator
             exit('Could not load `' . $path . '/test-results.xml` file.');
         }
 
-        foreach ($xml->testsuite as $testsuiteLevel1) {
-            foreach ($testsuiteLevel1->testsuite as $testsuiteLevel2) {
-                foreach ($testsuiteLevel2->testsuite as $testsuite) {
-                    $fileTests = [];
-                    $nameParts = explode('\\', (string)$testsuite['name']);
+        foreach ($xml->testsuite as $testSuiteLevel1) {
+            foreach ($testSuiteLevel1->testsuite as $testSuiteLevel2) {
+                foreach ($testSuiteLevel2->testsuite as $testSuiteLevel3) {
+                    $nameParts = explode('\\', (string)$testSuiteLevel3['name']);
                     $nameParts = array_splice($nameParts, -2);
                     $testClass = str_replace('Test', '', $nameParts[1]);
 
-                    foreach ($testsuite->testcase as $testCase) {
-                        $name = $testCase['name'];
-                        $name = str_replace('__pest_evaluable_', '', $name);
-                        $name = str_replace('__', '/underscore/', $name);
-                        $name = str_replace('_', ' ', $name);
-                        $name = str_replace('/underscore/', '_', $name);
-                        $fileTests[] = [
-                            'name' => $name,
-                            'passed' => empty($testCase->error) && empty($testCase->failure),
-                        ];
+                    $testSuites = !empty($testSuiteLevel3->testsuite) ? $testSuiteLevel3->testsuite : [$testSuiteLevel3];
+                    $fileTests = [];
+
+                    foreach ($testSuites as $testSuite) {
+                        foreach ($testSuite->testcase as $testCase) {
+                            $name = $testCase['name'];
+                            // The `str_replace()` calls must be run in this order.
+                            $name = str_replace('__pest_evaluable_', '', $name);
+                            $name = str_replace('__', '/underscore/', $name);
+                            $name = str_replace('_', ' ', $name);
+                            $name = str_replace('/underscore/', '_', $name);
+                            $name = str_replace('"dataset "', '“', $name);
+                            $name = str_replace('""', '”', $name);
+                            $fileTests[] = [
+                                'name' => $name,
+                                'passed' => empty($testCase->error) && empty($testCase->failure),
+                            ];
+                        }
                     }
 
                     $filePath = $nameParts[0] . '/' . $nameParts[1] . '.php';
