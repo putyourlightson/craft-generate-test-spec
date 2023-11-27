@@ -22,7 +22,7 @@ class GenerateTestSpecController extends Controller
         if (empty($outputPath)) {
             $this->stdout('Test spec could not be generated.', BaseConsole::FG_RED);
         } else {
-            $this->stdout('Test spec generated at ' . str_replace(CRAFT_BASE_PATH, '', $outputPath), BaseConsole::FG_GREEN);
+            $this->stdout('Test spec generated at ' . trim(str_replace(CRAFT_BASE_PATH, '', $outputPath), '/'), BaseConsole::FG_GREEN);
         }
 
         return ExitCode::OK;
