@@ -40,13 +40,7 @@ abstract class BaseGenerator
                     foreach ($testSuites as $testSuite) {
                         foreach ($testSuite->testcase as $testCase) {
                             $name = $testCase['name'];
-                            // The `str_replace()` calls must be run in this order.
-                            $name = str_replace('__pest_evaluable_', '', $name);
-                            $name = str_replace('__', '/underscore/', $name);
-                            $name = str_replace('_', ' ', $name);
-                            $name = str_replace('/underscore/', '_', $name);
-                            $name = str_replace('"dataset "', '“', $name);
-                            $name = str_replace('""', '”', $name);
+                            $name = str_replace(['"dataset "', '""'], '`', $name);
                             $fileTests[] = [
                                 'name' => $name,
                                 'passed' => empty($testCase->error) && empty($testCase->failure),
@@ -55,15 +49,18 @@ abstract class BaseGenerator
                     }
 
                     $filePath = $nameParts[0] . '/' . $nameParts[1] . '.php';
-                    $contents = file_get_contents($path . '/' . $filePath);
-                    preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
-                    $description = isset($matches[1]) ? trim($matches[1]) : '';
 
-                    $tests[$nameParts[0]][$testClass] = [
-                        'path' => $filePath,
-                        'description' => $description,
-                        'tests' => $fileTests,
-                    ];
+                    if (file_exists($path . '/' . $filePath)) {
+                        $contents = file_get_contents($path . '/' . $filePath);
+                        preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
+                        $description = isset($matches[1]) ? trim($matches[1]) : '';
+
+                        $tests[$nameParts[0]][$testClass] = [
+                            'path' => $filePath,
+                            'description' => $description,
+                            'tests' => $fileTests,
+                        ];
+                    }
                 }
             }
         }
