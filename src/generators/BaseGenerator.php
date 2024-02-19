@@ -5,6 +5,8 @@
 
 namespace putyourlightson\generatetestspec\generators;
 
+use SimpleXMLElement;
+
 abstract class BaseGenerator
 {
     /**
@@ -27,44 +29,58 @@ abstract class BaseGenerator
             exit('Could not load `' . $path . '/test-results.xml` file.');
         }
 
-        foreach ($xml->testsuite as $testSuiteLevel1) {
-            foreach ($testSuiteLevel1->testsuite as $testSuiteLevel2) {
-                foreach ($testSuiteLevel2->testsuite as $testSuiteLevel3) {
-                    $nameParts = explode('\\', (string)$testSuiteLevel3['name']);
-                    $nameParts = array_splice($nameParts, -2);
-                    $testClass = str_replace('Test', '', $nameParts[1]);
+        $testSuites = self::getTestSuitesWithCases($xml);
 
-                    $testSuites = !empty($testSuiteLevel3->testsuite) ? $testSuiteLevel3->testsuite : [$testSuiteLevel3];
-                    $fileTests = [];
+        foreach ($testSuites as $testSuite) {
+            $nameParts = explode('\\', (string)$testSuite['name']);
+            $nameParts = array_splice($nameParts, -2);
+            $testClass = str_replace('Test', '', $nameParts[1]);
+            $fileTests = [];
 
-                    foreach ($testSuites as $testSuite) {
-                        foreach ($testSuite->testcase as $testCase) {
-                            $name = $testCase['name'];
-                            $name = str_replace(['"dataset "', '""'], '`', $name);
-                            $fileTests[] = [
-                                'name' => $name,
-                                'passed' => empty($testCase->error) && empty($testCase->failure),
-                            ];
-                        }
-                    }
+            foreach ($testSuite->testcase as $testCase) {
+                $name = $testCase['name'];
+                $name = str_replace(['"dataset "', '""'], '`', $name);
+                $fileTests[] = [
+                    'name' => $name,
+                    'passed' => empty($testCase->error) && empty($testCase->failure),
+                ];
+            }
 
-                    $filePath = $nameParts[0] . '/' . $nameParts[1] . '.php';
+            $filePath = $nameParts[0] . '/' . $nameParts[1] . '.php';
 
-                    if (file_exists($path . '/' . $filePath)) {
-                        $contents = file_get_contents($path . '/' . $filePath);
-                        preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
-                        $description = isset($matches[1]) ? trim($matches[1]) : '';
+            if (file_exists($path . '/' . $filePath)) {
+                $contents = file_get_contents($path . '/' . $filePath);
+                preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
+                $description = isset($matches[1]) ? trim($matches[1]) : '';
 
-                        $tests[$nameParts[0]][$testClass] = [
-                            'path' => $filePath,
-                            'description' => $description,
-                            'tests' => $fileTests,
-                        ];
-                    }
-                }
+                $tests[$nameParts[0]][$testClass] = [
+                    'path' => $filePath,
+                    'description' => $description,
+                    'tests' => $fileTests,
+                ];
             }
         }
 
         return $tests;
+    }
+
+    /**
+     * Return all test suites that contain test cases.
+     *
+     * @return SimpleXMLElement[]
+     */
+    private static function getTestSuitesWithCases(SimpleXMLElement $testsuite): array
+    {
+        $testSuites = [];
+
+        foreach ($testsuite->testsuite as $testSuite) {
+            if (isset($testSuite->testcase)) {
+                $testSuites[] = $testSuite;
+            } else {
+                $testSuites = array_merge($testSuites, self::getTestSuitesWithCases($testSuite));
+            }
+        }
+
+        return $testSuites;
     }
 }
