@@ -32,7 +32,8 @@ abstract class BaseGenerator
         $testSuites = self::getTestSuitesWithCases($xml);
 
         foreach ($testSuites as $testSuite) {
-            $nameParts = explode('\\', (string)$testSuite['name']);
+            $name = preg_replace('/::.*/', '', (string)$testSuite['name']);
+            $nameParts = explode('\\', $name);
             $nameParts = array_splice($nameParts, -2);
             $testClass = str_replace('Test', '', $nameParts[1]);
             $fileTests = [];
