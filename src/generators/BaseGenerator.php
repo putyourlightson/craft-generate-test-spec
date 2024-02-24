@@ -52,11 +52,11 @@ abstract class BaseGenerator
                 $contents = file_get_contents($path . '/' . $filePath);
                 preg_match('/\/\*\*.*?\*(.*?)\*\//s', $contents, $matches);
                 $description = isset($matches[1]) ? trim($matches[1]) : '';
-
+                $previousTests = $tests[$nameParts[0]][$testClass]['tests'] ?? [];
                 $tests[$nameParts[0]][$testClass] = [
                     'path' => $filePath,
                     'description' => $description,
-                    'tests' => $fileTests,
+                    'tests' => array_merge($previousTests, $fileTests),
                 ];
             }
         }
