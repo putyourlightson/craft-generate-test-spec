@@ -16,7 +16,7 @@ composer require putyourlightson/craft-generate-test-spec --dev
 
 ## Usage
 
-This module looks for a `test-results.xml` file (JUnit XML format) in the test path and generates a test spec at `../TESTS.md`.
+This module looks for a `test-results.xml` file (JUnit XML format) in the test path and generates a test spec at `./TESTS.md`.
 
 ```shell
 php craft generate-test-spec/markdown path/to/tests

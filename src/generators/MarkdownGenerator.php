@@ -33,7 +33,7 @@ class MarkdownGenerator extends BaseGenerator
             }
         }
 
-        $outputPath = FileHelper::normalizePath(CRAFT_BASE_PATH . '/' . $path . '/../TESTS.md');
+        $outputPath = FileHelper::normalizePath(CRAFT_BASE_PATH . '/' . $path . '/TESTS.md');
         $contents = @file_get_contents($outputPath) ?: '';
         if (preg_match('/.*^\h*?---\h*$/ms', $contents, $matches)) {
             $contents = $matches[0] . PHP_EOL . $output;
